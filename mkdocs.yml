@@ -1,0 +1,9 @@
+site_name: 香港中文大学（深圳）
+theme:
+  name: readthedocs
+
+nav:
+  - 首页: index.md
+  - 用户问题处理: 江瑛芝-大量作业同时运行失败-用户磁盘配额满了.md
+  - 操作书册: CE集群使用gurobi+Python3.md
+
