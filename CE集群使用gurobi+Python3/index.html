@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>操作书册 - 香港中文大学（深圳）</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u64cd\u4f5c\u4e66\u518c";
+        var mkdocs_page_input_path = "CE\u96c6\u7fa4\u4f7f\u7528gurobi+Python3.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> 香港中文大学（深圳）
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">首页</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../%E6%B1%9F%E7%91%9B%E8%8A%9D-%E5%A4%A7%E9%87%8F%E4%BD%9C%E4%B8%9A%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5-%E7%94%A8%E6%88%B7%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D%E6%BB%A1%E4%BA%86/">用户问题处理</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">操作书册</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">香港中文大学（深圳）</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>操作书册</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h3 id="cuhksznicholashuang">本文以CUHKSZ用户账号nicholashuang为例，请用户根据具体情况替换为自己的个人账号</h3>
+<h3 id="1-sshce102713012"><strong>1. SSH登陆CE集群的登陆节点10.27.130.12。</strong></h3>
+<h3 id="2"><strong>2. 登陆后创建存放执行脚本的文件目录。</strong></h3>
+<p>创建文件目录（本例文件目录为gurobi，各用户根据各自的情况创建自己的文件目录）<br />
+<code>$ mkdir -p /home/nicholashuang/gurobi</code><br />
+<code>$ cd /home/nicholashuang/gurobi</code>  </p>
+<h3 id="3"><strong>3. 将执行文件传输到该目录下。</strong></h3>
+<p>要在CE集群上使用gurobi+Python3进行运算，需要有两个文件。<br />
+   3.1 自己编写的py文件，本例中的py文件以test.py为例，内容如下，请用户根据实际情况更改py文件的命名和内容。</p>
+<pre><code class="language-python">from gurobipy import *
+
+m = Model()
+x1 = m.addVar(lb = 0.0)
+x2 = m.addVar(lb = 0.0)
+m.addConstr(x1 + 2*x2 &lt;= 1)
+m.addConstr(x2 + 2*x1 &lt;= 1)
+m.update()
+m.setObjective(x1 + x2, GRB.MAXIMIZE)
+
+m.optimize()
+print(x1.x,x2.x)
+</code></pre>
+<p>3.2 提交任务的脚本，本例中提交任务的脚本以test_submit_py.sh为例，具体文件内容如下，用户根据实际情况更改该文件的命名和内容。  </p>
+<pre><code class="language-python">#!/bin/sh
+#SBATCH -J test
+#SBATCH -o %j.out
+#SBATCH -e %j.err
+#SBATCH --nodes=1
+#SBATCH --ntasks=5
+##SBATCH --exclusive
+
+module load python/3.9.6 gurobi/952 metis/4.0 openblas/0.3.15
+
+python3 test.py
+</code></pre>
+<p>请将这两个文件传输到上文新创建的目录，即/home/nicholashuang/gurobi中。  </p>
+<h3 id="4-python-3gurobi"><strong>4. 加载python 3环境，安装gurobi</strong></h3>
+<p>加载python3<br />
+<code>$ module load python/3.9.6</code><br />
+将python3.9.6加载到环境中后，可运行python3命令检查是否已经正常加载。<br />
+<code>$ python3</code><br />
+<img alt="Alt text" src="../image-2.png" />
+输入exit()返回shell后，继续安装gurobi  </p>
+<pre><code class="language-python">&gt;&gt;&gt; exit() 
+$ pip3 install gurobipy==9.5.2
+</code></pre>
+<h3 id="5"><strong>5. 提交任务</strong></h3>
+<p>用 <code>sbatch</code> 提交作业<br />
+<code>$ sbatch test_submit_py.sh</code>
+在任务的执行过程中，可使用下列命令查看任务状态<br />
+<code>$ squeue</code><br />
+<code>$ sacct</code><br />
+<code>$ scontrol show job xxxx</code> (xxxx为该job的id)  </p>
+<h3 id="6"><strong>6. 输出结果</strong></h3>
+<p>按照本例程序里的设定，任务执行完毕后，会生成如图所示的两个文件<br />
+<img alt="Alt text" src="../image-3.png" /><br />
+确认任务是否有报错<br />
+<code>$ cat xxx.err</code><br />
+确认任务输出结果<br />
+<code>$ cat xxx.out</code><br />
+若本例正常结束，xxx.err 为空，xxx.out 的输出结果如下图所示：<br />
+<img alt="Alt text" src="../image-4.png" />  </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../%E6%B1%9F%E7%91%9B%E8%8A%9D-%E5%A4%A7%E9%87%8F%E4%BD%9C%E4%B8%9A%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5-%E7%94%A8%E6%88%B7%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D%E6%BB%A1%E4%BA%86/" class="btn btn-neutral float-left" title="用户问题处理"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../%E6%B1%9F%E7%91%9B%E8%8A%9D-%E5%A4%A7%E9%87%8F%E4%BD%9C%E4%B8%9A%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5-%E7%94%A8%E6%88%B7%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D%E6%BB%A1%E4%BA%86/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
