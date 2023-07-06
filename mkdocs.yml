@@ -1,6 +1,6 @@
 site_name: 香港中文大学（深圳）
 theme:
-  name: rtd-dropdown
+  name: readthedocs
 
 nav:
   - 首页: index.md
