@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>CE集群使用gurobi+Python3 - 香港中文大学（深圳）</title>
+    <title>CE集群使用gurobi+Julia - 香港中文大学（深圳）</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "CE\u96c6\u7fa4\u4f7f\u7528gurobi+Python3";
-        var mkdocs_page_input_path = "CE\u96c6\u7fa4\u4f7f\u7528gurobi+Python3.md";
+        var mkdocs_page_name = "CE\u96c6\u7fa4\u4f7f\u7528gurobi+Julia";
+        var mkdocs_page_input_path = "CE\u96c6\u7fa4\u4f7f\u7528gurobi+Julia.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -50,12 +50,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">操作书册</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">CE集群操作手册</a>
-    <ul class="current">
-                <li class="toctree-l2 current"><a class="reference internal current" href="./">CE集群使用gurobi+Python3</a>
-    <ul class="current">
-    </ul>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="#">CE集群操作手册</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../CE%E9%9B%86%E7%BE%A4%E4%BD%BF%E7%94%A8gurobi%2BPython3/">CE集群使用gurobi+Python3</a>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../CE%E9%9B%86%E7%BE%A4%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.docx">CE集群普通用户手册</a>
                 </li>
@@ -76,9 +74,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-          <li>操作书册 &raquo;</li>
-          <li>CE集群操作手册 &raquo;</li>
-      <li>CE集群使用gurobi+Python3</li>
+      <li>CE集群使用gurobi+Julia</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -87,75 +83,83 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h3 id="cuhksznicholashuang">本文以CUHKSZ用户账号nicholashuang为例，请用户根据具体情况替换为自己的个人账号</h3>
-<h3 id="1-sshce102713012"><strong>1. SSH登陆CE集群的登陆节点10.27.130.12。</strong></h3>
-<h3 id="2"><strong>2. 登陆后创建存放执行脚本的文件目录。</strong></h3>
-<p>创建文件目录（本例文件目录为gurobi，各用户根据各自的情况创建自己的文件目录）<br />
-<code>$ mkdir -p /home/nicholashuang/gurobi</code><br />
-<code>$ cd /home/nicholashuang/gurobi</code>  </p>
-<h3 id="3"><strong>3. 将执行文件传输到该目录下。</strong></h3>
-<p>要在CE集群上使用gurobi+Python3进行运算，需要有两个文件。<br />
-   3.1 自己编写的py文件，本例中的py文件以test.py为例，内容如下，请用户根据实际情况更改py文件的命名和内容。</p>
-<pre><code class="language-python">from gurobipy import *
+                <p><strong>本例中以 CUHKSZ 用户账号 nicholashuang 为例，请用户根据具体情况替换为自己的个人账号</strong></p>
+<h2 id="1-ssh-ce-102713012">1、 SSH 登陆 CE 集群的登陆节点 10.27.130.12。</h2>
+<h2 id="2">2、登陆后创建存放执行脚本的文件目录。</h2>
+<p>创建文件目录（本例文件目录为 gurobi_julia，各用户根据各自的情况创建自己的文件目录）<br />
+<code>$ mkdir -p /home/nicholashuang/gurobi_julia</code><br />
+<code>$ cd /home/nicholashuang/gurobi_julia</code>  </p>
+<h2 id="3">3、将执行文件传输到该目录下。</h2>
+<p>要在 CE 集群上使用 gurobi+julia 进行运算，需要有两个文件。<br />
+1) 自己编写的 jl 文件，本例中的 jl 文件以 test.jl 为例，内容如下，请用户根据实际情况更改 jl 文件的命名和内容。  </p>
+<pre><code class="language-python">a = 1+1;
+println(a);
 
-m = Model()
-x1 = m.addVar(lb = 0.0)
-x2 = m.addVar(lb = 0.0)
-m.addConstr(x1 + 2*x2 &lt;= 1)
-m.addConstr(x2 + 2*x1 &lt;= 1)
-m.update()
-m.setObjective(x1 + x2, GRB.MAXIMIZE)
+using JuMP,Gurobi;
+mp = Model(Gurobi.Optimizer);
+@variable(mp, x1 &gt;= 0);
+@variable(mp, x2 &gt;= 0);
+@constraint(mp, 2x1 + x2 &lt;= 1);
+@constraint(mp, 2x2 + x1 &lt;= 1);
+@objective(mp, Max, x1+x2);
+optimize!(mp);
 
-m.optimize()
-print(x1.x,x2.x)
+println(objective_value(mp));
 </code></pre>
-<p>3.2 提交任务的脚本，本例中提交任务的脚本以test_submit_py.sh为例，具体文件内容如下，用户根据实际情况更改该文件的命名和内容。  </p>
+<p>2) 提交任务的脚本，本例中提交任务的脚本以 test_submit.sh 为例，具体文件内容如下，用户根据实际情况更改该文件的命名和内容。  </p>
 <pre><code class="language-python">#!/bin/sh
 #SBATCH -J test
 #SBATCH -o %j.out
 #SBATCH -e %j.err
 #SBATCH --nodes=1
-#SBATCH --ntasks=5
+#SBATCH --ntasks=5 
 ##SBATCH --exclusive
 
-module load python/3.9.6 gurobi/952 metis/4.0 openblas/0.3.15
+module load gurobi/952 metis/4.0 openblas/0.3.15 julia/1.6.2
 
-python3 test.py
+julia test.jl
 </code></pre>
-<p>请将这两个文件传输到上文新创建的目录，即/home/nicholashuang/gurobi中。  </p>
-<h3 id="4-python-3gurobi"><strong>4. 加载python 3环境，安装gurobi</strong></h3>
-<p>加载python3<br />
-<code>$ module load python/3.9.6</code><br />
-将python3.9.6加载到环境中后，可运行python3命令检查是否已经正常加载。<br />
-<code>$ python3</code><br />
-<img alt="Alt text" src="../image-2.png" />
-输入exit()返回shell后，继续安装gurobi  </p>
-<pre><code class="language-python">&gt;&gt;&gt; exit() 
-$ pip3 install gurobipy==9.5.2
-</code></pre>
-<h3 id="5"><strong>5. 提交任务</strong></h3>
-<p>用 <code>sbatch</code> 提交作业<br />
-<code>$ sbatch test_submit_py.sh</code>
+<p>请将这两个文件传输到上文新创建的目录中，即/home/nicholashuang/gurobi_julia 中。  </p>
+<h2 id="4">4、加载环境</h2>
+<p>加载 julia 和 gurobi 所需的环境<br />
+<code>$ module load gurobi/952 metis/4.0 openblas/0.3.15 coinhsl/2021.05.05.openblas julia/1.6.2 lapack/3.10.0</code><br />
+加载 gurobi 所需的环境，加载完成后，可用 module list 命令检查环境是否已经正常加载。<br />
+<code>$ module list</code><br />
+4、加载环境
+加载 julia 和 gurobi 所需的环境
+$ module load gurobi/952 metis/4.0 openblas/0.3.15 coinhsl/2021.05.05.openblas julia/1.6.2 lapack/3.10.0
+加载 gurobi 所需的环境，加载完成后，可用 module list 命令检查环境是否已经正常加载。
+$ module list
+<img alt="module list" src="../image-8.png" />  </p>
+<h2 id="5jumpgurobi">5、安装JuMP和Gurobi</h2>
+<p><code>$ julia</code><br />
+进入到julia中，然后按键盘上的“ ] ”键，进入julia的pkg模式，进入该模式后，命令行提示符会更换成(@v1.6 pkg)&gt; ，如下图所示<br />
+<img alt="Alt text" src="../image-9.png" /><br />
+在pkg模式下安装JuMp和Gurobi<br />
+<code>(@v1.6) pkg&gt; add JuMP, Gurobi</code><br />
+包安装完成后，按下退格键（即BACKSPACE键），退出到普通julia模式，按退格键后，提示符会从之前的(@v1.6 pkg)&gt;变回来。效果如下图所示：<br />
+<img alt="Alt text" src="../image-10.png" /><br />
+接着退出julia回到shell。<br />
+<code>julia&gt; exit()</code>  </p>
+<h2 id="6">6、提交任务</h2>
+<p>用sbatch提交任务<br />
+<code>$ sbatch test_submit.sh</code><br />
 在任务的执行过程中，可使用下列命令查看任务状态<br />
 <code>$ squeue</code><br />
 <code>$ sacct</code><br />
-<code>$ scontrol show job xxxx</code> (xxxx为该job的id)  </p>
-<h3 id="6"><strong>6. 输出结果</strong></h3>
+<code>$ scontrol show job xxxx</code> （xxxx为该job的id）  </p>
+<h2 id="7">7、输出结果</h2>
 <p>按照本例程序里的设定，任务执行完毕后，会生成如图所示的两个文件<br />
-<img alt="Alt text" src="../image-3.png" /><br />
+<img alt="Alt text" src="../image-11.png" /><br />
 确认任务是否有报错<br />
 <code>$ cat xxx.err</code><br />
 确认任务输出结果<br />
 <code>$ cat xxx.out</code><br />
-若本例正常结束，xxx.err 为空，xxx.out 的输出结果如下图所示：<br />
-<img alt="Alt text" src="../image-4.png" />  </p>
+若本例正常结束，xxx.err为空，xxx.out的输出结果如下图所示：<br />
+<img alt="Alt text" src="../image-12.png" />  </p>
               
             </div>
           </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../%E6%B1%9F%E7%91%9B%E8%8A%9D-%E5%A4%A7%E9%87%8F%E4%BD%9C%E4%B8%9A%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5-%E7%94%A8%E6%88%B7%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D%E6%BB%A1%E4%BA%86/" class="btn btn-neutral float-left" title="大量作业同时运行失败"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../CE%E9%9B%86%E7%BE%A4%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.docx" class="btn btn-neutral float-right" title="CE集群普通用户手册">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
 
   <hr/>
 
@@ -177,10 +181,6 @@ $ pip3 install gurobipy==9.5.2
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../%E6%B1%9F%E7%91%9B%E8%8A%9D-%E5%A4%A7%E9%87%8F%E4%BD%9C%E4%B8%9A%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5-%E7%94%A8%E6%88%B7%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D%E6%BB%A1%E4%BA%86/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../CE%E9%9B%86%E7%BE%A4%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.docx" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
