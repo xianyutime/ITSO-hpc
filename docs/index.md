@@ -3,13 +3,6 @@
 For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
 # 平台介绍
 &emsp;香港中文大学（深圳）高性能计算平台旨在为校内科研计算提供算力支撑服务，通过高性能计算集群管理平台、深度学习管理平台、高速大容量存储系统、高速IB计算网络等产品对大学现有零散的CPU服务器和GPU服务器进行统一管理，搭建一个校级高性能计算平台，也为日后大学建立领先级超算平台搭好整体框架。  
 
