@@ -9,5 +9,7 @@ nav:
   - 操作书册: 
     - CE集群操作手册: 
       - CE集群使用gurobi+Python3: CE集群使用gurobi+Python3.md
+      - CE集群使用gurobi+Julia: CE集群使用gurobi+Julia.md
+      - CE集群使用规范（试行）: CE集群使用规范（试行）.md
       - CE集群普通用户手册: CE集群普通用户手册.docx
 
