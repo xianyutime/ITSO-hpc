@@ -4,12 +4,14 @@ theme:
 
 nav:
   - 首页: index.md
-  - 用户问题处理: 
-    - 大量作业同时运行失败: 江瑛芝-大量作业同时运行失败-用户磁盘配额满了.md
+  - 1. 各集群使用规范: 
+    - CE集群使用规范（试行）: CE集群使用规范（试行）.md
+    - AI 集群使用规范（试行）: AI 集群使用规范（试行）.md
+    - OD 集群使用规范（试行）: OD 集群使用规范（试行）.md
   - 操作书册: 
     - CE集群操作手册: 
       - CE集群使用gurobi+Python3: CE集群使用gurobi+Python3.md
       - CE集群使用gurobi+Julia: CE集群使用gurobi+Julia.md
-      - CE集群使用规范（试行）: CE集群使用规范（试行）.md
+      
       - CE集群普通用户手册: CE集群普通用户手册.docx
 
